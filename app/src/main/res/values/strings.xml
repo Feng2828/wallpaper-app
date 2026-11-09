@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">随机相册壁纸</string>
+    <string name="wallpaper_name">随机相册壁纸</string>
+    <string name="wallpaper_description">从你指定的相册文件夹随机轮播图片；支持手动同步、60/120 秒自动切换、双击切换、亮屏解锁换图。</string>
+</resources>

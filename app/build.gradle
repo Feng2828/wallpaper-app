@@ -1,0 +1,34 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'com.example.randomwallpaper'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.example.randomwallpaper"
+        minSdk 26          // Android 8.0+，覆盖 K60E 的 Android 13/14/15
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+    }
+
+    buildTypes {
+        debug {
+            // debug 签名由 Gradle 自动生成，产物 app-debug.apk 可直接在手机安装
+            minifyEnabled false
+        }
+        release {
+            minifyEnabled false
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+}
+
+// 无任何 dependencies：不用 androidx、不用 Glide，全部使用系统 API。
+// 好处：GitHub Actions 在线编译时不会因为拉不到依赖而失败，编译也更快。

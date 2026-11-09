@@ -1,0 +1,5 @@
+// 根构建脚本：只声明 Android Gradle Plugin，不依赖任何第三方库。
+// 使用纯 Android Framework API 编写，在线编译时下载量最小、最不容易失败。
+plugins {
+    id 'com.android.application' version '8.2.2' apply false
+}

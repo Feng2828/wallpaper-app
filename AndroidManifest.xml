@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- 声明这是一个动态壁纸应用 -->
+    <uses-feature
+        android:name="android.software.live_wallpaper"
+        android:required="true" />
+
+    <!-- 相册读取权限：Android 13/14 用 READ_MEDIA_IMAGES，Android 11/12 用 READ_EXTERNAL_STORAGE。
+         注：本应用真正读取图片走的是 SAF 目录授权（ACTION_OPEN_DOCUMENT_TREE），
+         即使系统拒绝下面这些权限，选中的文件夹依然可读；这里申请是为了兼容各家 ROM 的文件选择器。 -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+
+    <!-- 申请加入电池优化白名单（HyperOS 保活关键） -->
+    <uses-permission android:name="android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS" />
+        <!-- 悬浮窗权限 -->
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <!-- 前台服务 -->
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+    <!-- 获取前台应用（判断是否桌面） -->
+    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions" />
+
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/app_icon"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <!-- 动态壁纸服务：BIND_WALLPAPER 保证只有系统壁纸管理器能绑定，
+             由系统 WallpaperManagerService 长期绑定，比普通后台服务更不容易被 HyperOS 杀掉。 -->
+        <service
+            android:name=".RandomWallpaperService"
+            android:exported="true"
+            android:label="@string/wallpaper_name"
+            android:permission="android.permission.BIND_WALLPAPER">
+            <intent-filter>
+                <action android:name="android.service.wallpaper.WallpaperService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.service.wallpaper"
+                android:resource="@xml/wallpaper" />
+        </service>
+                <!-- 后台定时换壁纸服务 -->
+        <service
+            android:name=".AutoChangeService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="自动切换壁纸" />
+        </service>
+
+
+    </application>
+
+</manifest>
